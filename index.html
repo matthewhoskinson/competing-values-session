@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leadership Values Assessment</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .drag-item {
+            touch-action: none;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .drag-item.dragging {
+            opacity: 0.5;
+            transform: scale(0.98);
+        }
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            .print-only {
+                display: block !important;
+            }
+            body {
+                background-color: #ffffff !important;
+                color: #000000 !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+        }
+        .print-only {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <!-- Header -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50 no-print">
+        <div class="max-w-5xl mx-auto px-4 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 p-2.5 rounded-xl text-white">
+                    <i class="fa-solid fa-compass text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Leadership Values Profiler</h1>
+                    <p class="text-xs text-slate-400">Discover priorities, overuses & competing counter-balances</p>
+                </div>
+            </div>
+
+            <!-- Step Progress Indicator -->
+            <nav class="flex items-center space-x-1 sm:space-x-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/50">
+                <button id="nav-step-1" onclick="navigateToStep(1)" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors bg-indigo-600 text-white shadow-sm">
+                    <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
+                    <span>Rank</span>
+                </button>
+                <i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i>
+                
+                <button id="nav-step-2" onclick="navigateToStep(2)" disabled class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors text-slate-500 cursor-not-allowed">
+                    <span class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-[10px]">2</span>
+                    <span>Reveal</span>
+                </button>
+                <i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i>
+
+                <button id="nav-step-3" onclick="navigateToStep(3)" disabled class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors text-slate-500 cursor-not-allowed">
+                    <span class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-[10px]">3</span>
+                    <span>Overuse</span>
+                </button>
+                <i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i>
+
+                <button id="nav-step-4" onclick="navigateToStep(4)" disabled class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors text-slate-500 cursor-not-allowed">
+                    <span class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-[10px]">4</span>
+                    <span>Balance</span>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-5xl mx-auto px-4 py-8 flex-grow w-full">
+
+        <!-- STEP 1 VIEW -->
+        <section id="step-1-view" class="space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-slate-100 pb-4 mb-4">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Step 1 of 4</span>
+                        <h2 class="text-2xl font-bold text-slate-900">Rank Your Leadership Values</h2>
+                    </div>
+                    <button onclick="shuffleValues()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 w-fit">
+                        <i class="fa-solid fa-shuffle"></i> Reshuffle List
+                    </button>
+                </div>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    Drag and drop or use the arrow buttons to arrange these 20 leadership values in order of personal importance. 
+                    Place your <strong>highest priorities at the top (#1)</strong> and lower priorities toward the bottom (#20).
+                </p>
+            </div>
+
+            <!-- Draggable List -->
+            <div id="values-list" class="space-y-2 max-w-3xl mx-auto">
+                <!-- Dynamically Populated -->
+            </div>
+
+            <!-- Submit Step 1 Button -->
+            <div class="flex justify-end pt-4 no-print">
+                <button onclick="submitStep1()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-600/20 transition flex items-center gap-2">
+                    <span>Complete Ranking & Lock Step 1</span>
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- STEP 2 VIEW -->
+        <section id="step-2-view" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Step 2 of 4</span>
+                <h2 class="text-2xl font-bold text-slate-900 mt-1">Category Breakdown & Color Reveal</h2>
+                <p class="text-sm text-slate-600 leading-relaxed mt-2">
+                    Your values are now mapped to their corresponding leadership categories. Review your dominant leadership styles and notice where your top priorities cluster.
+                </p>
+            </div>
+
+            <!-- Category Summary Cards Grid -->
+            <div id="category-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Color Coded Ranked List -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
+                <h3 class="text-lg font-bold text-slate-900 border-b pb-3">Your Complete Ranked Profile</h3>
+                <div id="step-2-ranked-list" class="space-y-2">
+                    <!-- Dynamically populated -->
+                </div>
+            </div>
+
+            <!-- Navigation Button -->
+            <div class="flex justify-between items-center pt-4 no-print">
+                <button onclick="navigateToStep(1)" class="text-slate-500 hover:text-slate-800 font-medium text-sm px-4 py-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Ranking
+                </button>
+                <button onclick="submitStep2()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-600/20 transition flex items-center gap-2">
+                    <span>Examine Overuse Risks (Step 3)</span>
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- STEP 3 VIEW -->
+        <section id="step-3-view" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Step 3 of 4</span>
+                <h2 class="text-2xl font-bold text-slate-900 mt-1">The Shadow Side: Overuse Risks</h2>
+                <p class="text-sm text-slate-600 leading-relaxed mt-2">
+                    Any leadership virtue taken to an extreme can become a liability. Below are the overuse risks associated with your <strong>Top 5 Core Priorities</strong>.
+                </p>
+            </div>
+
+            <!-- Top 5 Overuse Cards -->
+            <div id="overuse-cards-container" class="space-y-4">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Reflection Box -->
+            <div class="bg-amber-50 border border-amber-200 p-6 rounded-2xl space-y-3">
+                <h4 class="font-bold text-amber-900 flex items-center gap-2">
+                    <i class="fa-solid fa-lightbulb text-amber-600"></i> Reflection Prompt
+                </h4>
+                <p class="text-xs text-amber-800 leading-relaxed">
+                    Have colleagues or team members ever given feedback that aligns with these overuse tendencies? Recognizing when high intentions produce counterproductive habits is a core hallmark of mature leadership.
+                </p>
+                <textarea id="step-3-reflection" rows="3" class="w-full text-xs p-3 rounded-xl border border-amber-200 focus:ring-2 focus:ring-amber-500 focus:outline-none" placeholder="Optional: Jot down brief personal reflections on your overuse risks..."></textarea>
+            </div>
+
+            <!-- Navigation Button -->
+            <div class="flex justify-between items-center pt-4 no-print">
+                <button onclick="navigateToStep(2)" class="text-slate-500 hover:text-slate-800 font-medium text-sm px-4 py-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Step 2
+                </button>
+                <button onclick="submitStep3()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-600/20 transition flex items-center gap-2">
+                    <span>Discover Competing Counter-Balances (Step 4)</span>
+                    <i class="fa-solid fa-arrow-right text-sm"></i>
+                </button>
+            </div>
+        </section>
+
+
+        <!-- STEP 4 VIEW -->
+        <section id="step-4-view" class="hidden space-y-6">
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Step 4 of 4</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Counter-Balancing via Competing Values</h2>
+                        <p class="text-sm text-slate-600 leading-relaxed mt-2">
+                            To prevent your overuse risks from causing friction, purposefully engage the <strong>Competing / Opposite Value</strong> to restore equilibrium.
+                        </p>
+                    </div>
+                    <!-- Export Actions -->
+                    <div class="flex items-center gap-2 no-print shrink-0">
+                        <button onclick="window.print()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 shadow transition">
+                            <i class="fa-solid fa-print"></i> Print / Save PDF
+                        </button>
+                        <button onclick="downloadSummaryText()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 border border-indigo-200 transition">
+                            <i class="fa-solid fa-download"></i> Text Summary
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Complete Counter Balance Blueprint Cards -->
+            <div id="counter-balance-cards-container" class="space-y-4">
+                <!-- Dynamically populated -->
+            </div>
+
+            <!-- Synthesis & Action Plan -->
+            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
+                <h3 class="text-lg font-bold text-slate-900 border-b pb-3">Personal Leadership Action Plan</h3>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
+                        Which competing value will you consciously practice this month to stay balanced?
+                    </label>
+                    <textarea id="step-4-action-plan" rows="3" class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Write your commitment here (e.g., 'When driving Decisive Action, I will pause to ensure Group Deliberation to avoid Exclusion')..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-start pt-4 no-print">
+                <button onclick="navigateToStep(3)" class="text-slate-500 hover:text-slate-800 font-medium text-sm px-4 py-2 flex items-center gap-1.5">
+                    <i class="fa-solid fa-arrow-left"></i> Back to Step 3
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 no-print">
+        <p>© Leadership Values Assessment Framework | Built for Interactive Learning</p>
+    </footer>
+
+    <script>
+        // Core Category Definitions
+        const CATEGORIES = {
+            1: { id: 1, name: "Creative Change", color: "#10B981", bgClass: "bg-emerald-500", textClass: "text-emerald-700", borderClass: "border-emerald-200", lightBg: "bg-emerald-50" },
+            2: { id: 2, name: "Robust Results", color: "#3B82F6", bgClass: "bg-blue-500", textClass: "text-blue-700", borderClass: "border-blue-200", lightBg: "bg-blue-50" },
+            3: { id: 3, name: "Strategic Structures", color: "#8B5CF6", bgClass: "bg-purple-500", textClass: "text-purple-700", borderClass: "border-purple-200", lightBg: "bg-purple-50" },
+            4: { id: 4, name: "Collaborative Community", color: "#F59E0B", bgClass: "bg-amber-500", textClass: "text-amber-700", borderClass: "border-amber-200", lightBg: "bg-amber-50" }
+        };
+
+        // Complete 20 Value Items
+        const RAW_VALUES = [
+            // Category 1 - Creative Change
+            { id: "cc-1", categoryId: 1, value: "Growth focus", overuse: "Waste", competing: "Cost Control" },
+            { id: "cc-2", categoryId: 1, value: "Self Organization", overuse: "Confusion", competing: "Organizational Predictability" },
+            { id: "cc-3", categoryId: 1, value: "Creative Action", overuse: "Chaos", competing: "Procedural Compliance" },
+            { id: "cc-4", categoryId: 1, value: "Intrinsic Motivation", overuse: "Blind Intensity", competing: "Managerial Control" },
+            { id: "cc-5", categoryId: 1, value: "Positive Contagion (aka Woo)", overuse: "Delusion", competing: "Objective Analysis" },
+
+            // Category 2 - Robust Results
+            { id: "rr-1", categoryId: 2, value: "Full Engagement", overuse: "Exhaustion", competing: "Life Balance" },
+            { id: "rr-2", categoryId: 2, value: "Individual Accountability", overuse: "Conflict", competing: "Cohesive Teamwork" },
+            { id: "rr-3", categoryId: 2, value: "Decisive Action", overuse: "Exclusion", competing: "Group Deliberation" },
+            { id: "rr-4", categoryId: 2, value: "Achievement Focus", overuse: "Self-Interest", competing: "Authentic Relationships" },
+            { id: "rr-5", categoryId: 2, value: "Constructive Confrontation", overuse: "Abrasiveness", competing: "Appreciative Expression" },
+
+            // Category 3 - Strategic Structures
+            { id: "ss-1", categoryId: 3, value: "Cost Control", overuse: "Austerity", competing: "Growth Focus" },
+            { id: "ss-2", categoryId: 3, value: "Organizational Predictability", overuse: "Rigidity", competing: "Self Organization" },
+            { id: "ss-3", categoryId: 3, value: "Procedural Compliance", overuse: "Bureaucracy", competing: "Creative Action" },
+            { id: "ss-4", categoryId: 3, value: "Managerial Control", overuse: "Micro-Management", competing: "Intrinsic Motivation" },
+            { id: "ss-5", categoryId: 3, value: "Objective Analysis", overuse: "Cynicism", competing: "Positive Contagion (aka Woo)" },
+
+            // Category 4 - Collaborative Community
+            { id: "co-1", categoryId: 4, value: "Life Balance", overuse: "Withdrawal", competing: "Full Engagement" },
+            { id: "co-2", categoryId: 4, value: "Cohesive Teamwork", overuse: "Groupthink", competing: "Individual Accountability" },
+            { id: "co-3", categoryId: 4, value: "Group Deliberation", overuse: "Indecisiveness", competing: "Decisive Action" },
+            { id: "co-4", categoryId: 4, value: "Authentic Relationships", overuse: "Permissiveness", competing: "Achievement Focus" },
+            { id: "co-5", categoryId: 4, value: "Appreciative Expression", overuse: "Conflict Avoidance", competing: "Constructive Confrontation" }
+        ];
+
+        // State Tracking
+        let currentRankedList = [];
+        let maxUnlockedStep = 1;
+        let currentStep = 1;
+        let dragSrcIndex = null;
+
+        // Initialize App
+        window.addEventListener('DOMContentLoaded', () => {
+            shuffleValues();
+        });
+
+        // Fisher-Yates Shuffle Logic
+        function shuffleValues() {
+            currentRankedList = [...RAW_VALUES];
+            for (let i = currentRankedList.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [currentRankedList[i], currentRankedList[j]] = [currentRankedList[j], currentRankedList[i]];
+            }
+            renderStep1List();
+        }
+
+        // Render Step 1 Items
+        function renderStep1List() {
+            const listEl = document.getElementById('values-list');
+            listEl.innerHTML = '';
+
+            currentRankedList.forEach((item, index) => {
+                const card = document.createElement('div');
+                card.className = "drag-item bg-white p-3.5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between gap-3 cursor-grab hover:border-indigo-300 transition-all";
+                card.draggable = true;
+                card.dataset.index = index;
+
+                card.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-7 h-7 rounded-lg bg-slate-100 text-slate-500 text-xs font-bold flex items-center justify-center shrink-0">
+                            ${index + 1}
+                        </span>
+                        <i class="fa-solid fa-grip-vertical text-slate-300 text-sm"></i>
+                        <span class="font-semibold text-slate-800 text-sm">${item.value}</span>
+                    </div>
+
+                    <div class="flex items-center gap-1">
+                        <button onclick="moveItem(${index}, -1)" ${index === 0 ? 'disabled class="text-slate-200 p-1 rounded"' : 'class="text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg transition"'} title="Move Up">
+                            <i class="fa-solid fa-arrow-up text-xs"></i>
+                        </button>
+                        <button onclick="moveItem(${index}, 1)" ${index === currentRankedList.length - 1 ? 'disabled class="text-slate-200 p-1 rounded"' : 'class="text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 p-1.5 rounded-lg transition"'} title="Move Down">
+                            <i class="fa-solid fa-arrow-down text-xs"></i>
+                        </button>
+                    </div>
+                `;
+
+                // Drag Events
+                card.addEventListener('dragstart', handleDragStart);
+                card.addEventListener('dragover', handleDragOver);
+                card.addEventListener('drop', handleDrop);
+                card.addEventListener('dragend', handleDragEnd);
+
+                listEl.appendChild(card);
+            });
+        }
+
+        // Move Item Up/Down via Keyboard/Touch Buttons
+        function moveItem(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= currentRankedList.length) return;
+            
+            const temp = currentRankedList[index];
+            currentRankedList[index] = currentRankedList[newIndex];
+            currentRankedList[newIndex] = temp;
+            renderStep1List();
+        }
+
+        // Drag & Drop Handlers
+        function handleDragStart(e) {
+            dragSrcIndex = parseInt(this.dataset.index);
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            return false;
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) e.stopPropagation();
+            const targetIndex = parseInt(this.dataset.index);
+
+            if (dragSrcIndex !== null && dragSrcIndex !== targetIndex) {
+                const movedItem = currentRankedList.splice(dragSrcIndex, 1)[0];
+                currentRankedList.splice(targetIndex, 0, movedItem);
+                renderStep1List();
+            }
+            return false;
+        }
+
+        function handleDragEnd() {
+            this.classList.remove('dragging');
+        }
+
+        // Step Navigation Control
+        function navigateToStep(step) {
+            if (step > maxUnlockedStep) return;
+
+            currentStep = step;
+
+            // Hide all step views
+            document.getElementById('step-1-view').classList.add('hidden');
+            document.getElementById('step-2-view').classList.add('hidden');
+            document.getElementById('step-3-view').classList.add('hidden');
+            document.getElementById('step-4-view').classList.add('hidden');
+
+            // Show selected view
+            document.getElementById(`step-${step}-view`).classList.remove('hidden');
+
+            // Update Navigation Tab Highlights
+            for (let i = 1; i <= 4; i++) {
+                const btn = document.getElementById(`nav-step-${i}`);
+                if (i === step) {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors bg-indigo-600 text-white shadow-sm";
+                    btn.querySelector('span:first-child').className = "w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]";
+                } else if (i <= maxUnlockedStep) {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors bg-slate-700 hover:bg-slate-600 text-slate-200 cursor-pointer";
+                    btn.querySelector('span:first-child').className = "w-5 h-5 rounded-full bg-indigo-500/30 text-indigo-300 flex items-center justify-center text-[10px]";
+                } else {
+                    btn.className = "px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors text-slate-500 cursor-not-allowed";
+                    btn.querySelector('span:first-child').className = "w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-[10px]";
+                }
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Unlock Next Steps
+        function unlockStep(step) {
+            if (step > maxUnlockedStep) {
+                maxUnlockedStep = step;
+                const navBtn = document.getElementById(`nav-step-${step}`);
+                if (navBtn) navBtn.disabled = false;
+            }
+        }
+
+        // Submit Step 1 -> Move to Step 2
+        function submitStep1() {
+            unlockStep(2);
+            renderStep2();
+            navigateToStep(2);
+        }
+
+        // Submit Step 2 -> Move to Step 3
+        function submitStep2() {
+            unlockStep(3);
+            renderStep3();
+            navigateToStep(3);
+        }
+
+        // Submit Step 3 -> Move to Step 4
+        function submitStep3() {
+            unlockStep(4);
+            renderStep4();
+            navigateToStep(4);
+        }
+
+        // Render Step 2 Views
+        function renderStep2() {
+            // Calculate Category Scores
+            // Inverse points: Rank 1 = 20 pts, Rank 20 = 1 pt
+            const catScores = { 1: 0, 2: 0, 3: 0, 4: 0 };
+            const catCountsInTop5 = { 1: 0, 2: 0, 3: 0, 4: 0 };
+
+            currentRankedList.forEach((item, idx) => {
+                const points = 20 - idx;
+                catScores[item.categoryId] += points;
+                if (idx < 5) {
+                    catCountsInTop5[item.categoryId]++;
+                }
+            });
+
+            // Render Category Summary Cards
+            const grid = document.getElementById('category-cards-grid');
+            grid.innerHTML = '';
+
+            Object.values(CATEGORIES).forEach(cat => {
+                const score = catScores[cat.id];
+                const top5Count = catCountsInTop5[cat.id];
+                const percentage = Math.round((score / 210) * 100); // 210 total possible points
+
+                const card = document.createElement('div');
+                card.className = `bg-white p-5 rounded-2xl border ${cat.borderClass} shadow-sm space-y-3`;
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3.5 h-3.5 rounded-full" style="background-color: ${cat.color}"></span>
+                            <h4 class="font-bold text-slate-900">${cat.name}</h4>
+                        </div>
+                        <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${cat.lightBg} ${cat.textClass}">
+                            ${top5Count} in Top 5
+                        </span>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs text-slate-500 mb-1 font-medium">
+                            <span>Weighted Score</span>
+                            <span>${score} pts (${percentage}%)</span>
+                        </div>
+                        <div class="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden">
+                            <div class="h-full rounded-full transition-all duration-500" style="width: ${percentage}%; background-color: ${cat.color}"></div>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+
+            // Render Full Coded Ranked List
+            const listEl = document.getElementById('step-2-ranked-list');
+            listEl.innerHTML = '';
+
+            currentRankedList.forEach((item, index) => {
+                const cat = CATEGORIES[item.categoryId];
+                const itemRow = document.createElement('div');
+                itemRow.className = `p-3 rounded-xl border ${cat.borderClass} ${cat.lightBg} flex items-center justify-between`;
+                
+                itemRow.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <span class="w-7 h-7 rounded-lg bg-white/80 ${cat.textClass} text-xs font-bold flex items-center justify-center shrink-0 shadow-sm border ${cat.borderClass}">
+                            ${index + 1}
+                        </span>
+                        <span class="font-semibold text-slate-800 text-sm">${item.value}</span>
+                    </div>
+                    <span class="text-xs font-medium px-3 py-1 rounded-full bg-white/90 ${cat.textClass} border ${cat.borderClass}">
+                        ${cat.name}
+                    </span>
+                `;
+                listEl.appendChild(itemRow);
+            });
+        }
+
+        // Render Step 3 (Overuse Risks)
+        function renderStep3() {
+            const container = document.getElementById('overuse-cards-container');
+            container.innerHTML = '';
+
+            const top5 = currentRankedList.slice(0, 5);
+
+            top5.forEach((item, idx) => {
+                const cat = CATEGORIES[item.categoryId];
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3";
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-slate-400">#${idx + 1} Priority</span>
+                            <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${cat.color}"></span>
+                            <span class="text-xs font-semibold ${cat.textClass}">${cat.name}</span>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 items-center pt-1">
+                        <div class="p-3.5 rounded-xl ${cat.lightBg} border ${cat.borderClass}">
+                            <div class="text-xs text-slate-500 font-semibold uppercase tracking-wider mb-1">Core Virtue</div>
+                            <div class="text-base font-bold text-slate-900">${item.value}</div>
+                        </div>
+
+                        <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200">
+                            <div class="text-xs text-rose-600 font-semibold uppercase tracking-wider mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-triangle-exclamation"></i> Overuse Risk (Shadow Side)
+                            </div>
+                            <div class="text-base font-bold text-rose-900">${item.overuse}</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Render Step 4 (Competing Values Counter-Balance)
+        function renderStep4() {
+            const container = document.getElementById('counter-balance-cards-container');
+            container.innerHTML = '';
+
+            const top5 = currentRankedList.slice(0, 5);
+
+            top5.forEach((item, idx) => {
+                const cat = CATEGORIES[item.categoryId];
+                const card = document.createElement('div');
+                card.className = "bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4";
+
+                card.innerHTML = `
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+                        <div class="flex items-center gap-2">
+                            <span class="text-xs font-bold text-slate-400">#${idx + 1} Core Priority</span>
+                            <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${cat.color}"></span>
+                            <span class="text-xs font-semibold ${cat.textClass}">${cat.name}</span>
+                        </div>
+                    </div>
+
+                    <!-- 3-Column Progression Grid -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                        <!-- Step A: Virtue -->
+                        <div class="p-3.5 rounded-xl ${cat.lightBg} border ${cat.borderClass}">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">1. Preferred Virtue</span>
+                            <div class="text-sm font-bold text-slate-900 mt-1">${item.value}</div>
+                        </div>
+
+                        <!-- Step B: Overuse -->
+                        <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600">2. Overuse Risk</span>
+                            <div class="text-sm font-bold text-rose-900 mt-1">${item.overuse}</div>
+                        </div>
+
+                        <!-- Step C: Competing Value -->
+                        <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
+                            <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">3. Counter-Balance Value</span>
+                            <div class="text-sm font-bold text-emerald-900 mt-1">${item.competing}</div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Export Download Summary Text
+        function downloadSummaryText() {
+            let content = "=== LEADERSHIP VALUES ASSESSMENT REPORT ===\n\n";
+            content += "TOP 5 CORE LEADERSHIP PRIORITIES:\n";
+            currentRankedList.slice(0, 5).forEach((item, i) => {
+                const cat = CATEGORIES[item.categoryId];
+                content += `${i + 1}. ${item.value} [Category: ${cat.name}]\n`;
+                content += `   - Overuse Risk: ${item.overuse}\n`;
+                content += `   - Counter-Balance Value: ${item.competing}\n\n`;
+            });
+
+            const reflection = document.getElementById('step-3-reflection').value;
+            if (reflection) {
+                content += `OVERUSE REFLECTIONS:\n${reflection}\n\n`;
+            }
+
+            const actionPlan = document.getElementById('step-4-action-plan').value;
+            if (actionPlan) {
+                content += `PERSONAL ACTION PLAN:\n${actionPlan}\n\n`;
+            }
+
+            content += "COMPLETE RANKED LIST (1-20):\n";
+            currentRankedList.forEach((item, i) => {
+                content += `${i + 1}. ${item.value} (${CATEGORIES[item.categoryId].name})\n`;
+            });
+
+            const element = document.createElement('a');
+            const file = new Blob([content], { type: 'text/plain' });
+            element.href = URL.createObjectURL(file);
+            element.download = "Leadership_Values_Report.txt";
+            document.body.appendChild(element);
+            element.click();
+            document.body.removeChild(element);
+        }
+    </script>
+</body>
+</html>
