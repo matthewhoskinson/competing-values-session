@@ -37,6 +37,12 @@
             .page-break {
                 page-break-before: always;
             }
+            section {
+                display: block !important;
+            }
+            section.hidden {
+                display: hidden !important;
+            }
         }
         .print-only {
             display: none;
@@ -53,8 +59,8 @@
                     <i class="fa-solid fa-compass text-2xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-xl font-bold tracking-tight">Leadership Values Profiler</h1>
-                    <p class="text-xs text-slate-400">Discover priorities, overuses & competing counter-balances</p>
+                    <h1 class="text-xl font-bold tracking-tight">Team Values Assessment</h1>
+                    <p class="text-xs text-slate-400">A resource from Northstar Strategies LLC</p>
                 </div>
             </div>
 
@@ -62,25 +68,25 @@
             <nav class="flex items-center space-x-1 sm:space-x-2 bg-slate-800/80 p-1.5 rounded-xl border border-slate-700/50">
                 <button id="nav-step-1" onclick="navigateToStep(1)" class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors bg-indigo-600 text-white shadow-sm">
                     <span class="w-5 h-5 rounded-full bg-white/20 flex items-center justify-center text-[10px]">1</span>
-                    <span>Rank</span>
+                    <span id="label-step-1">Rank</span>
                 </button>
                 <i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i>
                 
                 <button id="nav-step-2" onclick="navigateToStep(2)" disabled class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors text-slate-500 cursor-not-allowed">
                     <span class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-[10px]">2</span>
-                    <span>Reveal</span>
+                    <span id="label-step-2"></span>
                 </button>
                 <i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i>
 
                 <button id="nav-step-3" onclick="navigateToStep(3)" disabled class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors text-slate-500 cursor-not-allowed">
                     <span class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-[10px]">3</span>
-                    <span>Overuse</span>
+                    <span id="label-step-3"></span>
                 </button>
                 <i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i>
 
                 <button id="nav-step-4" onclick="navigateToStep(4)" disabled class="px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-colors text-slate-500 cursor-not-allowed">
                     <span class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-[10px]">4</span>
-                    <span>Balance</span>
+                    <span id="label-step-4"></span>
                 </button>
             </nav>
         </div>
@@ -95,14 +101,14 @@
                 <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-4 border-b border-slate-100 pb-4 mb-4">
                     <div>
                         <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Step 1 of 4</span>
-                        <h2 class="text-2xl font-bold text-slate-900">Rank Your Leadership Values</h2>
+                        <h2 class="text-2xl font-bold text-slate-900">Rank Team Values</h2>
                     </div>
                     <button onclick="shuffleValues()" class="text-xs bg-slate-100 hover:bg-slate-200 text-slate-700 px-3 py-2 rounded-lg font-medium transition flex items-center gap-1.5 w-fit">
                         <i class="fa-solid fa-shuffle"></i> Reshuffle List
                     </button>
                 </div>
                 <p class="text-sm text-slate-600 leading-relaxed">
-                    Drag and drop or use the arrow buttons to arrange these 20 leadership values in order of personal importance. 
+                    Drag and drop or use the arrow buttons to arrange these 20 team values in order of importance for your team. 
                     Place your <strong>highest priorities at the top (#1)</strong> and lower priorities toward the bottom (#20).
                 </p>
             </div>
@@ -115,7 +121,7 @@
             <!-- Submit Step 1 Button -->
             <div class="flex justify-end pt-4 no-print">
                 <button onclick="submitStep1()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-600/20 transition flex items-center gap-2">
-                    <span>Complete Ranking & Lock Step 1</span>
+                    <span>Please wait before proceeding.</span>
                     <i class="fa-solid fa-arrow-right text-sm"></i>
                 </button>
             </div>
@@ -125,11 +131,24 @@
         <!-- STEP 2 VIEW -->
         <section id="step-2-view" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
-                <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Step 2 of 4</span>
-                <h2 class="text-2xl font-bold text-slate-900 mt-1">Category Breakdown & Color Reveal</h2>
-                <p class="text-sm text-slate-600 leading-relaxed mt-2">
-                    Your values are now mapped to their corresponding leadership categories. Review your dominant leadership styles and notice where your top priorities cluster.
-                </p>
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Step 2 of 4</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">Category Breakdown & Color Reveal</h2>
+                        <p class="text-sm text-slate-600 leading-relaxed mt-2">
+                            Your team values are now mapped to their corresponding categories. Review your team's dominant styles and notice where your top priorities cluster.
+                        </p>
+                    </div>
+                    <!-- Export Actions -->
+                    <div class="flex items-center gap-2 no-print shrink-0">
+                        <button onclick="window.print()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 shadow transition">
+                            <i class="fa-solid fa-print"></i> Print / Save PDF
+                        </button>
+                        <button onclick="downloadSummaryText()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 border border-indigo-200 transition">
+                            <i class="fa-solid fa-download"></i> Text Summary
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- Category Summary Cards Grid -->
@@ -151,7 +170,7 @@
                     <i class="fa-solid fa-arrow-left"></i> Back to Ranking
                 </button>
                 <button onclick="submitStep2()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-600/20 transition flex items-center gap-2">
-                    <span>Examine Overuse Risks (Step 3)</span>
+                    <span>Please wait before proceeding.</span>
                     <i class="fa-solid fa-arrow-right text-sm"></i>
                 </button>
             </div>
@@ -161,14 +180,27 @@
         <!-- STEP 3 VIEW -->
         <section id="step-3-view" class="hidden space-y-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80">
-                <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Step 3 of 4</span>
-                <h2 class="text-2xl font-bold text-slate-900 mt-1">The Shadow Side: Overuse Risks</h2>
-                <p class="text-sm text-slate-600 leading-relaxed mt-2">
-                    Any leadership virtue taken to an extreme can become a liability. Below are the overuse risks associated with your <strong>Top 5 Core Priorities</strong>.
-                </p>
+                <div class="flex flex-col md:flex-row justify-between md:items-center gap-4">
+                    <div>
+                        <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Step 3 of 4</span>
+                        <h2 class="text-2xl font-bold text-slate-900 mt-1">The Shadow Side: Overuse Risks</h2>
+                        <p class="text-sm text-slate-600 leading-relaxed mt-2">
+                            Any team virtue taken to an extreme can become a liability. Below are the overuse risks associated with your <strong>Top 7 Core Priorities</strong>.
+                        </p>
+                    </div>
+                    <!-- Export Actions -->
+                    <div class="flex items-center gap-2 no-print shrink-0">
+                        <button onclick="window.print()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 shadow transition">
+                            <i class="fa-solid fa-print"></i> Print / Save PDF
+                        </button>
+                        <button onclick="downloadSummaryText()" class="bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 border border-indigo-200 transition">
+                            <i class="fa-solid fa-download"></i> Text Summary
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <!-- Top 5 Overuse Cards -->
+            <!-- Top 7 Overuse Cards -->
             <div id="overuse-cards-container" class="space-y-4">
                 <!-- Dynamically populated -->
             </div>
@@ -181,7 +213,7 @@
                 <p class="text-xs text-amber-800 leading-relaxed">
                     Have colleagues or team members ever given feedback that aligns with these overuse tendencies? Recognizing when high intentions produce counterproductive habits is a core hallmark of mature leadership.
                 </p>
-                <textarea id="step-3-reflection" rows="3" class="w-full text-xs p-3 rounded-xl border border-amber-200 focus:ring-2 focus:ring-amber-500 focus:outline-none" placeholder="Optional: Jot down brief personal reflections on your overuse risks..."></textarea>
+                <textarea id="step-3-reflection" rows="3" class="w-full text-xs p-3 rounded-xl border border-amber-200 focus:ring-2 focus:ring-amber-500 focus:outline-none" placeholder="Optional: Jot down brief team reflections on your overuse risks..."></textarea>
             </div>
 
             <!-- Navigation Button -->
@@ -190,7 +222,7 @@
                     <i class="fa-solid fa-arrow-left"></i> Back to Step 2
                 </button>
                 <button onclick="submitStep3()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-xl font-semibold shadow-lg shadow-indigo-600/20 transition flex items-center gap-2">
-                    <span>Discover Competing Counter-Balances (Step 4)</span>
+                    <span>Please wait before proceeding.</span>
                     <i class="fa-solid fa-arrow-right text-sm"></i>
                 </button>
             </div>
@@ -205,7 +237,7 @@
                         <span class="text-xs font-bold tracking-wider text-indigo-600 uppercase">Step 4 of 4</span>
                         <h2 class="text-2xl font-bold text-slate-900 mt-1">Counter-Balancing via Competing Values</h2>
                         <p class="text-sm text-slate-600 leading-relaxed mt-2">
-                            To prevent your overuse risks from causing friction, purposefully engage the <strong>Competing / Opposite Value</strong> to restore equilibrium.
+                            To prevent your overuse risks from causing friction, purposefully engage the <strong>Competing / Opposite Value</strong> to restore equilibrium across your top 7 priorities.
                         </p>
                     </div>
                     <!-- Export Actions -->
@@ -227,12 +259,12 @@
 
             <!-- Synthesis & Action Plan -->
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200/80 space-y-4">
-                <h3 class="text-lg font-bold text-slate-900 border-b pb-3">Personal Leadership Action Plan</h3>
+                <h3 class="text-lg font-bold text-slate-900 border-b pb-3">Team Leadership Action Plan</h3>
                 <div>
                     <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
-                        Which competing value will you consciously practice this month to stay balanced?
+                        Which competing value will your team consciously practice this month to stay balanced?
                     </label>
-                    <textarea id="step-4-action-plan" rows="3" class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Write your commitment here (e.g., 'When driving Decisive Action, I will pause to ensure Group Deliberation to avoid Exclusion')..."></textarea>
+                    <textarea id="step-4-action-plan" rows="3" class="w-full text-xs p-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:outline-none" placeholder="Write your team commitment here (e.g., 'When driving Decisive Action, we will pause to ensure Group Deliberation to avoid Exclusion')..."></textarea>
                 </div>
             </div>
 
@@ -247,10 +279,11 @@
 
     <!-- Footer -->
     <footer class="bg-white border-t border-slate-200 py-6 text-center text-xs text-slate-500 no-print">
-        <p>© Leadership Values Assessment Framework | Built for Interactive Learning</p>
+        <p>© Team Values Assessment | Northstar Strategies LLC</p>
     </footer>
 
     <script>
+        // ... existing categories and raw values code ...
         // Core Category Definitions
         const CATEGORIES = {
             1: { id: 1, name: "Creative Change", color: "#10B981", bgClass: "bg-emerald-500", textClass: "text-emerald-700", borderClass: "border-emerald-200", lightBg: "bg-emerald-50" },
@@ -299,9 +332,18 @@
         // Initialize App
         window.addEventListener('DOMContentLoaded', () => {
             shuffleValues();
+            updateStepNavLabels();
         });
 
-        // Fisher-Yates Shuffle Logic
+        // Dynamic Step Labels Update
+        function updateStepNavLabels() {
+            document.getElementById('label-step-1').textContent = "Rank";
+            document.getElementById('label-step-2').textContent = maxUnlockedStep >= 2 ? "Reveal" : "";
+            document.getElementById('label-step-3').textContent = maxUnlockedStep >= 3 ? "Overuse" : "";
+            document.getElementById('label-step-4').textContent = maxUnlockedStep >= 4 ? "Balance" : "";
+        }
+
+        // ... existing drag & drop code ...
         function shuffleValues() {
             currentRankedList = [...RAW_VALUES];
             for (let i = currentRankedList.length - 1; i > 0; i--) {
@@ -311,7 +353,6 @@
             renderStep1List();
         }
 
-        // Render Step 1 Items
         function renderStep1List() {
             const listEl = document.getElementById('values-list');
             listEl.innerHTML = '';
@@ -341,7 +382,6 @@
                     </div>
                 `;
 
-                // Drag Events
                 card.addEventListener('dragstart', handleDragStart);
                 card.addEventListener('dragover', handleDragOver);
                 card.addEventListener('drop', handleDrop);
@@ -351,7 +391,6 @@
             });
         }
 
-        // Move Item Up/Down via Keyboard/Touch Buttons
         function moveItem(index, direction) {
             const newIndex = index + direction;
             if (newIndex < 0 || newIndex >= currentRankedList.length) return;
@@ -362,7 +401,6 @@
             renderStep1List();
         }
 
-        // Drag & Drop Handlers
         function handleDragStart(e) {
             dragSrcIndex = parseInt(this.dataset.index);
             this.classList.add('dragging');
@@ -397,16 +435,15 @@
 
             currentStep = step;
 
-            // Hide all step views
             document.getElementById('step-1-view').classList.add('hidden');
             document.getElementById('step-2-view').classList.add('hidden');
             document.getElementById('step-3-view').classList.add('hidden');
             document.getElementById('step-4-view').classList.add('hidden');
 
-            // Show selected view
             document.getElementById(`step-${step}-view`).classList.remove('hidden');
 
-            // Update Navigation Tab Highlights
+            updateStepNavLabels();
+
             for (let i = 1; i <= 4; i++) {
                 const btn = document.getElementById(`nav-step-${i}`);
                 if (i === step) {
@@ -424,59 +461,53 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Unlock Next Steps
         function unlockStep(step) {
             if (step > maxUnlockedStep) {
                 maxUnlockedStep = step;
                 const navBtn = document.getElementById(`nav-step-${step}`);
                 if (navBtn) navBtn.disabled = false;
+                updateStepNavLabels();
             }
         }
 
-        // Submit Step 1 -> Move to Step 2
         function submitStep1() {
             unlockStep(2);
             renderStep2();
             navigateToStep(2);
         }
 
-        // Submit Step 2 -> Move to Step 3
         function submitStep2() {
             unlockStep(3);
             renderStep3();
             navigateToStep(3);
         }
 
-        // Submit Step 3 -> Move to Step 4
         function submitStep3() {
             unlockStep(4);
             renderStep4();
             navigateToStep(4);
         }
 
-        // Render Step 2 Views
+        // Render Step 2 (Updated to Top 7 Count)
         function renderStep2() {
-            // Calculate Category Scores
-            // Inverse points: Rank 1 = 20 pts, Rank 20 = 1 pt
             const catScores = { 1: 0, 2: 0, 3: 0, 4: 0 };
-            const catCountsInTop5 = { 1: 0, 2: 0, 3: 0, 4: 0 };
+            const catCountsInTop7 = { 1: 0, 2: 0, 3: 0, 4: 0 };
 
             currentRankedList.forEach((item, idx) => {
                 const points = 20 - idx;
                 catScores[item.categoryId] += points;
-                if (idx < 5) {
-                    catCountsInTop5[item.categoryId]++;
+                if (idx < 7) {
+                    catCountsInTop7[item.categoryId]++;
                 }
             });
 
-            // Render Category Summary Cards
             const grid = document.getElementById('category-cards-grid');
             grid.innerHTML = '';
 
             Object.values(CATEGORIES).forEach(cat => {
                 const score = catScores[cat.id];
-                const top5Count = catCountsInTop5[cat.id];
-                const percentage = Math.round((score / 210) * 100); // 210 total possible points
+                const top7Count = catCountsInTop7[cat.id];
+                const percentage = Math.round((score / 210) * 100);
 
                 const card = document.createElement('div');
                 card.className = `bg-white p-5 rounded-2xl border ${cat.borderClass} shadow-sm space-y-3`;
@@ -487,7 +518,7 @@
                             <h4 class="font-bold text-slate-900">${cat.name}</h4>
                         </div>
                         <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${cat.lightBg} ${cat.textClass}">
-                            ${top5Count} in Top 5
+                            ${top7Count} in Top 7
                         </span>
                     </div>
                     <div>
@@ -503,7 +534,6 @@
                 grid.appendChild(card);
             });
 
-            // Render Full Coded Ranked List
             const listEl = document.getElementById('step-2-ranked-list');
             listEl.innerHTML = '';
 
@@ -527,14 +557,14 @@
             });
         }
 
-        // Render Step 3 (Overuse Risks)
+        // Render Step 3 (Updated to Top 7)
         function renderStep3() {
             const container = document.getElementById('overuse-cards-container');
             container.innerHTML = '';
 
-            const top5 = currentRankedList.slice(0, 5);
+            const top7 = currentRankedList.slice(0, 7);
 
-            top5.forEach((item, idx) => {
+            top7.forEach((item, idx) => {
                 const cat = CATEGORIES[item.categoryId];
                 const card = document.createElement('div');
                 card.className = "bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3";
@@ -566,14 +596,14 @@
             });
         }
 
-        // Render Step 4 (Competing Values Counter-Balance)
+        // Render Step 4 (Updated to Top 7)
         function renderStep4() {
             const container = document.getElementById('counter-balance-cards-container');
             container.innerHTML = '';
 
-            const top5 = currentRankedList.slice(0, 5);
+            const top7 = currentRankedList.slice(0, 7);
 
-            top5.forEach((item, idx) => {
+            top7.forEach((item, idx) => {
                 const cat = CATEGORIES[item.categoryId];
                 const card = document.createElement('div');
                 card.className = "bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4";
@@ -587,21 +617,17 @@
                         </div>
                     </div>
 
-                    <!-- 3-Column Progression Grid -->
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                        <!-- Step A: Virtue -->
                         <div class="p-3.5 rounded-xl ${cat.lightBg} border ${cat.borderClass}">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-slate-500">1. Preferred Virtue</span>
                             <div class="text-sm font-bold text-slate-900 mt-1">${item.value}</div>
                         </div>
 
-                        <!-- Step B: Overuse -->
                         <div class="p-3.5 rounded-xl bg-rose-50 border border-rose-200">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-rose-600">2. Overuse Risk</span>
                             <div class="text-sm font-bold text-rose-900 mt-1">${item.overuse}</div>
                         </div>
 
-                        <!-- Step C: Competing Value -->
                         <div class="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200">
                             <span class="text-[10px] font-bold uppercase tracking-wider text-emerald-700">3. Counter-Balance Value</span>
                             <div class="text-sm font-bold text-emerald-900 mt-1">${item.competing}</div>
@@ -612,11 +638,12 @@
             });
         }
 
-        // Export Download Summary Text
+        // Export Download Summary Text (Updated to Top 7)
         function downloadSummaryText() {
-            let content = "=== LEADERSHIP VALUES ASSESSMENT REPORT ===\n\n";
-            content += "TOP 5 CORE LEADERSHIP PRIORITIES:\n";
-            currentRankedList.slice(0, 5).forEach((item, i) => {
+            let content = "=== TEAM VALUES ASSESSMENT REPORT ===\n";
+            content += "Northstar Strategies LLC\n\n";
+            content += "TOP 7 CORE TEAM PRIORITIES:\n";
+            currentRankedList.slice(0, 7).forEach((item, i) => {
                 const cat = CATEGORIES[item.categoryId];
                 content += `${i + 1}. ${item.value} [Category: ${cat.name}]\n`;
                 content += `   - Overuse Risk: ${item.overuse}\n`;
@@ -630,7 +657,7 @@
 
             const actionPlan = document.getElementById('step-4-action-plan').value;
             if (actionPlan) {
-                content += `PERSONAL ACTION PLAN:\n${actionPlan}\n\n`;
+                content += `TEAM LEADERSHIP ACTION PLAN:\n${actionPlan}\n\n`;
             }
 
             content += "COMPLETE RANKED LIST (1-20):\n";
@@ -641,7 +668,7 @@
             const element = document.createElement('a');
             const file = new Blob([content], { type: 'text/plain' });
             element.href = URL.createObjectURL(file);
-            element.download = "Leadership_Values_Report.txt";
+            element.download = "Team_Values_Report.txt";
             document.body.appendChild(element);
             element.click();
             document.body.removeChild(element);
